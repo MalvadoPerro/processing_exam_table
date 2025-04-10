@@ -1,4 +1,4 @@
-python -3.11 -m venv .venv
+python -m venv .venv
 "./.venv/Scripts/pip.exe" install wheel
 "./.venv/Scripts/pip.exe" install -r requirements.txt
 echo off

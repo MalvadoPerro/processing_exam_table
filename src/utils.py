@@ -187,9 +187,17 @@ def write_results(client: gspread.Client, df_marks: pd.DataFrame, processed_data
     worksheet.clear()
     set_with_dataframe(worksheet, df_marks)
     print(f"Данные по общей оценке записаны.")
+
+    df_main = df_marks[const.BASE_COLS].copy()
     
     for section_num, df in processed_data.items():
-        sheet_name = f"Раздел {section_num}"
+        list_sheets = ['Раздел 2. Python', 'Раздел 3. ML', 'Раздел 4. Алгоритмы', 'Раздел 5. SQL', 'Раздел 6. Анализ текстовых данных', 'Раздел 7. WEB']
+        pattern = f"Раздел {section_num}."
+
+        for sheet in list_sheets:
+            if pattern in sheet:
+                sheet_name = sheet
+
         try:
             worksheet = spreadsheet.worksheet(sheet_name)
         except gspread.WorksheetNotFound:
@@ -198,7 +206,28 @@ def write_results(client: gspread.Client, df_marks: pd.DataFrame, processed_data
                 rows=max(df.shape[0], 100), 
                 cols=max(df.shape[1], 10)
             )
-        
+
         worksheet.clear()
         set_with_dataframe(worksheet, df)
         print(f"Данные для раздела {section_num} записаны.")
+
+        df_temp = df[const.BASE_COLS + ['Процент правильных ответов']].copy()
+        print(df_temp.columns)
+        df_temp = df_temp.rename(columns={'Процент правильных ответов': sheet_name})
+        print(df_temp.columns)
+
+        df_main = df_main.merge(df_temp, how='left', on=const.BASE_COLS)
+
+    sheet_name = "Сводка по разделам"
+    try:
+        worksheet = spreadsheet.worksheet(sheet_name)
+    except gspread.WorksheetNotFound:
+        worksheet = spreadsheet.add_worksheet(
+            title=sheet_name, 
+            rows=max(df_main.shape[0], 100), 
+            cols=max(df_main.shape[1], 10)
+        )
+
+    worksheet.clear()
+    set_with_dataframe(worksheet, df_main)
+    print(f"Сводка по разделам записана.")
