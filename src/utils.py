@@ -212,9 +212,7 @@ def write_results(client: gspread.Client, df_marks: pd.DataFrame, processed_data
         print(f"Данные для раздела {section_num} записаны.")
 
         df_temp = df[const.BASE_COLS + ['Процент правильных ответов']].copy()
-        print(df_temp.columns)
         df_temp = df_temp.rename(columns={'Процент правильных ответов': sheet_name})
-        print(df_temp.columns)
 
         df_main = df_main.merge(df_temp, how='left', on=const.BASE_COLS)
 
