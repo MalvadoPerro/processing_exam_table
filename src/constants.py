@@ -16,7 +16,7 @@ if DEBUG:
 else:
     SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
 SOURCE_SHEET_NAME = os.getenv("SOURCE_SHEET_NAME")
-BASE_COLS = ['ФИО', 'Группа']
+BASE_COLS = ['Отметка времени', 'ФИО', 'Группа']
 
 PROJECT_FOLDER = Path.cwd()
 CREDS_FOLDER = PROJECT_FOLDER / "creds"
